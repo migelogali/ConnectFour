@@ -19,20 +19,20 @@ class Connectfour:
         self._whos_turn = 1
         self._num_turns = 1
         self._end = False
-        self._board_checkers_list_1 = [None, None, None, None, None, None, None,
-                                       None, None, None, None, None, None, None,
-                                       None, None, None, None, None, None, None,
-                                       None, None, None, None, None, None, None,
-                                       None, None, None, None, None, None, None,
-                                       None, None, None, None, None, None, None,
-                                       None, None, None, None, None, None, None]
-        self._board_checkers_list_2 = [None, None, None, None, None, None, None,
-                                       None, None, None, None, None, None, None,
-                                       None, None, None, None, None, None, None,
-                                       None, None, None, None, None, None, None,
-                                       None, None, None, None, None, None, None,
-                                       None, None, None, None, None, None, None,
-                                       None, None, None, None, None, None, None]
+        self._board_checkers_list_1 = [ 0, 0, 0, 0, 0, 0, 0,
+                                       0, 0, 0, 0, 0, 0, 0,
+                                       0, 0, 0, 0, 0, 0, 0,
+                                       0, 0, 0, 0, 0, 0, 0,
+                                       0, 0, 0, 0, 0, 0, 0,
+                                       0, 0, 0, 0, 0, 0, 0,
+                                       0, 0, 0, 0, 0, 0, 0]
+        self._board_checkers_list_2 = [ 0, 0, 0, 0, 0, 0, 0,
+                                       0, 0, 0, 0, 0, 0, 0,
+                                       0, 0, 0, 0, 0, 0, 0,
+                                       0, 0, 0, 0, 0, 0, 0,
+                                       0, 0, 0, 0, 0, 0, 0,
+                                       0, 0, 0, 0, 0, 0, 0,
+                                       0, 0, 0, 0, 0, 0, 0]
 
     def create_player(self, player_name):
         """Adds a player's name and its object to the player dictionary"""
@@ -51,11 +51,11 @@ class Connectfour:
             print("Game is over.")
             print()
             return
-        if self._rolls == 1:
+        if self._num_turns == 1:
             self.first_turn()
         # otherwise, play rest of game as normal, alternating turns
         else:
-            if self._turn == 1:
+            if self._whos_turn == 1:
                 self.play_player_1()
             else:
                 self.play_player_2()
@@ -77,10 +77,10 @@ class Connectfour:
         # makes sure that user chose a correct checker location
         position_1 = self.validate_position_1()
         # places player one's checker in that spot
-        self._board_checkers_list_1[position_1] = True
+        self._board_checkers_list_1[position_1] = 1
         # places the same checker using player two's version of the board
         position_2 = self.find_other_player_position(position_1)
-        self._board_checkers_list_2[position_2] = True
+        self._board_checkers_list_2[position_2] = 1
         # determines if player one has won either vertically, horizontally, or diagonally after each checker placed
         self._end = self.check_horiz(position_1)
         if self._end is True:
@@ -105,9 +105,9 @@ class Connectfour:
         self.print_board_2()
         self.print_positions_2()
         position_2 = self.validate_position_2()
-        self._board_checkers_list_2[position_2] = False
+        self._board_checkers_list_2[position_2] = 2
         position_1 = self.find_other_player_position(position_2)
-        self._board_checkers_list_1[position_1] = False
+        self._board_checkers_list_1[position_1] = 2
         self._end = self.check_horiz(position_1)
         if self._end is True:
             return ""
@@ -181,12 +181,12 @@ class Connectfour:
 
     def validate_position_1(self):
         """Determines if the position player 1 choice was valid, checking multiple possible inputs."""
-        print("Choose your position to place your checker. Type just the number and choose a None spot either above another checker or on the bottom row if available.")
+        print("Choose your position to place your checker. Type just the number and choose a empty spot either above another checker or on the bottom row if available.")
         valid_position = False
         while valid_position is False:
             try:
                 position = int(input(
-                    "What position would you like to place your checker? (True respesents your checkers) "))
+                    "What position would you like to place your checker? (1 respesents your checkers) "))
             except ValueError:
                 print("Please enter an integer number for your position")
                 print("")
@@ -194,10 +194,10 @@ class Connectfour:
                 if position < 0 or position > 41:
                     print("Please choose a checker within the range of positions.")
                     print()
-                elif self._board_checkers_list_1[position] != None:
+                elif self._board_checkers_list_1[position] != 0:
                     print("Please choose an empty position.")
                     print()
-                elif self._board_checkers_list_1[position + 7] == None and position + 7 < 42:
+                elif self._board_checkers_list_1[position + 7] == 0 and position + 7 < 42:
                     print("Please choose a position above a checker or on the bottom row.")
                     print()
                 # valid entry
@@ -207,12 +207,12 @@ class Connectfour:
 
     def validate_position_2(self):
         """Determines if the position player 2 choice was valid, checking multiple possible inputs."""
-        print("Choose your position to place your checker. Type just the number and choose a None spot either above another checker or on the bottom row if available.")
+        print("Choose your position to place your checker. Type just the number and choose a 0 spot either above another checker or on the bottom row if available.")
         valid_position = False
         while valid_position is False:
             try:
                 position = int(input(
-                    "What position would you like to place your checker? (False respesents your checkers) "))
+                    "What position would you like to place your checker? (2 respesents your checkers) "))
             except ValueError:
                 print("Please enter an integer number for your position")
                 print("")
@@ -221,10 +221,10 @@ class Connectfour:
                 if position < 0 or position > 41:
                     print("Please choose a checker within the range of positions.")
                     print()
-                elif self._board_checkers_list_2[position] != None:
+                elif self._board_checkers_list_2[position] != 0:
                     print("Please choose an empty position.")
                     print()
-                elif self._board_checkers_list_2[position + 7] == None and position + 7 < 42:
+                elif self._board_checkers_list_2[position + 7] == 0 and position + 7 < 42:
                     print("Please choose a position above a checker or on the bottom row.")
                     print()
                 # valid entry
@@ -259,7 +259,7 @@ class Connectfour:
         horiz_position = position - 1
         if self._whos_turn == 1:
             if horiz_position >= 0:
-                while self._board_checkers_list_1[horiz_position] is True:
+                while self._board_checkers_list_1[horiz_position] == 1:
                     horiz_count += 1
                     horiz_position -= 1
                     if horiz_count == 4:
@@ -273,7 +273,7 @@ class Connectfour:
             # check right
             horiz_position = position + 1
             if horiz_position <= 41:
-                while self._board_checkers_list_1[horiz_position] is True:
+                while self._board_checkers_list_1[horiz_position] == 1:
                     horiz_count += 1
                     horiz_position += 1
                     if horiz_count == 4:
@@ -286,7 +286,7 @@ class Connectfour:
         # check for player two if its thier turn
         else:
             if horiz_position >= 0:
-                while self._board_checkers_list_1[horiz_position] is False:
+                while self._board_checkers_list_1[horiz_position] == 2:
                     horiz_count += 1
                     horiz_position -= 1
                     if horiz_count == 4:
@@ -297,7 +297,7 @@ class Connectfour:
                         break
             horiz_position = position + 1
             if horiz_position <= 41:
-                while self._board_checkers_list_1[horiz_position] is False:
+                while self._board_checkers_list_1[horiz_position] == 2:
                     horiz_count += 1
                     horiz_position += 1
                     if horiz_count == 4:
@@ -315,7 +315,7 @@ class Connectfour:
         if self._whos_turn == 1:
             if vert_position >= 0:
                 # check up
-                while self._board_checkers_list_1[vert_position] is True:
+                while self._board_checkers_list_1[vert_position] == 1:
                     vert_count += 1
                     vert_position -= 7
                     if vert_count == 4:
@@ -327,7 +327,7 @@ class Connectfour:
             vert_position = position + 7
             if vert_position <= 41:
                 # check down
-                while self._board_checkers_list_1[vert_position] is True:
+                while self._board_checkers_list_1[vert_position] == 1:
                     vert_count += 1
                     vert_position += 7
                     if vert_count == 4:
@@ -338,7 +338,7 @@ class Connectfour:
                         break
         else:
             if vert_position >= 0:
-                while self._board_checkers_list_1[vert_position] is False:
+                while self._board_checkers_list_1[vert_position] == 2:
                     vert_count += 1
                     vert_position -= 7
                     if vert_count == 4:
@@ -349,7 +349,7 @@ class Connectfour:
                         break
             vert_position = position + 7
             if vert_position <= 41:
-                while self._board_checkers_list_1[vert_position] is False:
+                while self._board_checkers_list_1[vert_position] == 2:
                     vert_count += 1
                     vert_position += 7
                     if vert_count == 4:
@@ -367,7 +367,7 @@ class Connectfour:
         # checks both types of diagonals, which require two sets of two while loops for each player
         if self._whos_turn == 1:
             if diag_position >= 0:
-                while self._board_checkers_list_1[diag_position] is True:
+                while self._board_checkers_list_1[diag_position] == 1 and diag_position % 7 != 6:
                     diag_count += 1
                     diag_position -= 8
                     if diag_count == 4:
@@ -378,7 +378,7 @@ class Connectfour:
                         break
             diag_position = position + 8
             if diag_position <= 41:
-                while self._board_checkers_list_1[diag_position] is True:
+                while self._board_checkers_list_1[diag_position] == 1 and diag_position % 7 != 0:
                     diag_count += 1
                     diag_position += 8
                     if diag_count == 4:
@@ -390,7 +390,7 @@ class Connectfour:
             diag_count = 1
             diag_position = position + 6
             if diag_position <= 41:
-                while self._board_checkers_list_1[diag_position] is True:
+                while self._board_checkers_list_1[diag_position] == 1 and diag_position % 7 != 6:
                     diag_count += 1
                     diag_position += 6
                     if diag_count == 4:
@@ -401,7 +401,7 @@ class Connectfour:
                         break
             diag_position = position - 6
             if diag_position >= 0:
-                while self._board_checkers_list_1[diag_position] is True:
+                while self._board_checkers_list_1[diag_position] == 1 and diag_position != 0:
                     diag_count += 1
                     diag_position -= 6
                     if diag_count == 4:
@@ -412,7 +412,7 @@ class Connectfour:
                         break
         else:
             if diag_position >= 0:
-                while self._board_checkers_list_1[diag_position] is False:
+                while self._board_checkers_list_1[diag_position] == 2 and diag_position % 7 != 6:
                     diag_count += 1
                     diag_position -= 8
                     if diag_count == 4:
@@ -423,7 +423,7 @@ class Connectfour:
                         break
             diag_position = position + 8
             if diag_position <= 41:
-                while self._board_checkers_list_1[diag_position] is False:
+                while self._board_checkers_list_1[diag_position] == 2 and diag_position != 0:
                     diag_count += 1
                     diag_position += 8
                     if diag_count == 4:
@@ -435,7 +435,7 @@ class Connectfour:
             diag_count = 1
             diag_position = position + 6
             if diag_position <= 41:
-                while self._board_checkers_list_1[diag_position] is False:
+                while self._board_checkers_list_1[diag_position] == 2 and diag_position % 7 != 6:
                     diag_count += 1
                     diag_position += 6
                     if diag_count == 4:
@@ -446,7 +446,7 @@ class Connectfour:
                         break
             diag_position = position - 6
             if diag_position >= 0:
-                while self._board_checkers_list_1[diag_position] is False:
+                while self._board_checkers_list_1[diag_position] == 2 and diag_position != 0:
                     diag_count += 1
                     diag_position -= 6
                     if diag_count == 4:
